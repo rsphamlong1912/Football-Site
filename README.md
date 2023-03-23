@@ -1,6 +1,6 @@
 # Football-Site
-Fullstack open source Football site application made with MongoDB, Express & Nodejs 
-Function:
+##Fullstack open source Football site application made with MongoDB, Express & Nodejs 
+###Function:
 0. Login/ logout
 1. CRUD Players/ Nations
 2. Pagination (Server side)
