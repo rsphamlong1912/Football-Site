@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Web Page</title>
+  <!-- Bao gồm file CSS của Bulma -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css" integrity="sha512-LKj+15XlyXgC73VtKPuJtW+2KxvBtPWZBhxyJHfWtxm8JvX9+nyK1m0YegW5/KbmvuwgmJHTdZ+VPoI0dqS38w==" crossorigin="anonymous" />
+</head>
+<body>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">Hello, World!</h1>
+      <p class="subtitle">Click the button below to open the popup.</p>
+      <button class="button is-primary" onclick="document.querySelector('#popup').classList.add('is-active')">Open Popup</button>
+    </div>
+  </section>
+
+  <!-- Popup -->
+  <div id="popup" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Popup Title</p>
+        <button class="delete" aria-label="close" onclick="document.querySelector('#popup').classList.remove('is-active')"></button>
+      </header>
+      <section class="modal-card-body">
+        <p>Popup content goes here.</p>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-success" onclick="document.querySelector('#popup').classList.remove('is-active')">Close</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Bao gồm file JS của Bulma -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/js/bulma.min.js" integrity="sha512-XSL8md+KzAg/ysd1EBcvzQx+8keNkzJ1pogDe+bJN9P5/RW+5c5v5d6Am++F6fmnt8wpD22fCaC/MP1M48hRtg==" crossorigin="anonymous"></script>
+</body>
+</html>

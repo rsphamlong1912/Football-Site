@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+  <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script type="text/javascript" charset="utf8"
+    src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+  <script src="https://kit.fontawesome.com/589ebc73ef.js" crossorigin="anonymous"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/js/bulma.min.js"
+        integrity="sha512-XSL8md+KzAg/ysd1EBcvzQx+8keNkzJ1pogDe+bJN9P5/RW+5c5v5d6Am++F6fmnt8wpD22fCaC/MP1M48hRtg=="
+        crossorigin="anonymous"></script> -->
+  <style>
+    @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300);
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-weight: 300;
+    }
+
+    body {
+      font-family: 'Source Sans Pro', sans-serif;
+      color: white;
+      font-weight: 300;
+      background-image: url("https://t4.ftcdn.net/jpg/02/39/92/53/360_F_239925343_eJEmB1nFgvEodY9WlaEYsROoAF9a7Twc.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 100vh;
+    }
+
+    #paging ul {
+      list-style: none;
+      display: flex;
+    }
+
+    #paging .paginationjs-page,
+    #paging .paginationjs-ellipsis,
+    #paging .paginationjs-prev,
+    #paging .paginationjs-next {
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+      border: 1px solid black;
+      text-align: center;
+    }
+
+    #paging li a {
+      color: white;
+    }
+
+    #paging .active {
+      background: black;
+      color: white;
+    }
+  </style>
+</head>
+<nav class="navbar is-danger" style="position: fixed; top:0; width: 99vw;" role="navigation"
+  aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item">
+      <img src="https://www.pngmart.com/files/22/FIFA-Logo-PNG-Isolated-Photo.png" />
+    </a>
+
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="/">
+        <i class="fa-solid fa-house" style="margin-right: 5px;"></i>
+        Home
+      </a>
+      <a href="/nations" class="navbar-item">
+        Nation
+      </a>
+
+      <a href="/players" class="navbar-item">
+        Player
+      </a>
+    </div>
+
+    <% if(isLogin===true) { %>
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <a class="button is-primary" href="/users/edit">
+              <strong>Profile</strong>
+            </a>
+            <a class="button is-light" href="/users/logout">
+              Log out
+            </a>
+          </div>
+        </div>
+      </div>
+      <% } %>
+
+  </div>
+  <% if(isLogin===false) { %>
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <a class="button is-primary" href="/users/login">
+            <strong> <i class="fa-solid fa-right-to-bracket" style="margin-right: 5px;"></i>Log in</strong>
+          </a>
+        </div>
+      </div>
+    </div>
+    <% } %>
+      </div>
+</nav>
+
+<body>
+  <div style="margin-top:60px ; color: red;">
+    <% if(error_msg !='' ){ %>
+      <%= error_msg %>
+        <% } %>
+  </div>
+  <div id="content" class="columns is-multiline" style="margin-left: 20px; margin-right: 20px;">
+    <% players.forEach(function(player) { %>
+      <div class="column is-one-quarter">
+        <div class="card">
+          <div class="card-image">
+            <figure class="image is-4by3">
+              <img src="<%= player.image %>" alt="Placeholder image">
+            </figure>
+          </div>
+          <div class="card-content">
+            <div class="media">
+              <div class="media-left">
+                <figure class="image is-48x48">
+                  <img
+                    src="https://cloudinary.fifa.com/api/v3/picture/flags-sq-2/<%=player.nation.name.slice(0, 3).toUpperCase()%>?tx=c_fill,g_auto,q_auto,w_70,h_46"
+                    alt="Placeholder image">
+                </figure>
+              </div>
+              <div class="media-content">
+                <p class="title is-4">
+                  <%= player.name %>
+                </p>
+                <p class="subtitle is-6">Nation: <%= player.nation.name %>
+                </p>
+              </div>
+            </div>
+            <div id="result"></div>
+
+            <div class="content">
+              <a href="/players/<%=player.id%>" class="button is-primary" style="width: 100%;">View more</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+  </div>
+  <div id="paging">
+
+  </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+  crossorigin="anonymous"></script>
+<script src="https://pagination.js.org/dist/2.5.1/pagination.js"></script>
+<script>
+
+  $('#paging').pagination({
+    dataSource: 'http://localhost:3100/paging?page=1',
+    locator: 'players',
+    totalNumberLocator: function (response) {
+      console.log(response.total)
+      return response.total
+    },
+    pageSize: 3,
+    afterPageOnClick: function (event, pageNumber) {
+      loadPage(pageNumber)
+    }
+
+  })
+  function loadPage(page) {
+    $.ajax({
+      url: `http://localhost:3100/paging?page=${page}`,
+      dataType: 'json'
+    })
+      .then(rs => {
+        console.log(rs.players);
+        $('#content').html('')
+        rs.players.forEach(player => {
+          var item = `
+          <div class="column is-one-quarter">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-4by3">
+                  <img src="${player.image}" alt="Placeholder image">
+                </figure>
+              </div>
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-left">
+                    <figure class="image is-48x48">
+                      <img src="https://cloudinary.fifa.com/api/v3/picture/flags-sq-2/${player.nation.name.slice(0, 3).toUpperCase()}?tx=c_fill,g_auto,q_auto,w_70,h_46" alt="Placeholder image">
+                    </figure>
+                  </div>
+                  <div class="media-content">
+                    <p class="title is-4">
+                      ${player.name}
+                    </p>
+                    <p class="subtitle is-6">Nation: ${player.nation.name}
+                    </p>
+                  </div>
+                </div>
+                <div id="result"></div>
+                <div class="content">
+                  <a href="/players/${player._id}" class="button is-primary" style="width: 100%;">View more</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+          $('#content').append(item);
+        })
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+
+</script>
+
+
+</html>

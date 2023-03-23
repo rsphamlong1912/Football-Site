@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+    <script src="https://kit.fontawesome.com/589ebc73ef.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/js/bulma.min.js"
+                integrity="sha512-XSL8md+KzAg/ysd1EBcvzQx+8keNkzJ1pogDe+bJN9P5/RW+5c5v5d6Am++F6fmnt8wpD22fCaC/MP1M48hRtg=="
+                crossorigin="anonymous"></script> -->
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+
+        .search {
+            width: 50%;
+            display: flex;
+            margin: 0 auto;
+        }
+
+        .searchTerm {
+            width: 90%;
+            border: 3px solid #00B4CC;
+            margin: 0 auto;
+            border-right: none;
+            padding: 5px;
+            height: 40px;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+            color: #9DBFAF;
+        }
+
+        .searchTerm:focus {
+            color: #00B4CC;
+        }
+
+        .searchButton {
+            width: 10%;
+            height: 36px;
+            border: 1px solid #00B4CC;
+            background: #00B4CC;
+            text-align: center;
+            color: #fff;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<nav class="navbar is-danger" style="position: fixed; top:0; width: 99vw;" role="navigation"
+    aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item">
+            <img src="https://www.pngmart.com/files/22/FIFA-Logo-PNG-Isolated-Photo.png" />
+        </a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="/">
+                <i class="fa-solid fa-house" style="margin-right: 5px;"></i>
+                Home
+            </a>
+            <a href="/nations" class="navbar-item">
+                Nation
+            </a>
+
+            <a href="/players" class="navbar-item">
+                Player
+            </a>
+        </div>
+
+        <% if(isLogin===true) { %>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a style="margin-right: 5px;"
+                            onClick="document.querySelector('#popup2').classList.add('is-active')">
+                            <button class="button is-danger is-light">New Nation</button>
+                        </a>
+                        <a class="button is-primary" href="/users/edit">
+                            <strong>Profile</strong>
+                        </a>
+                        <a class="button is-light" href="/users/logout">
+                            Log out
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+
+    </div>
+    <% if(isLogin===false) { %>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <a class="button is-primary" href="/users/login">
+                        <strong> <i class="fa-solid fa-right-to-bracket" style="margin-right: 5px;"></i>Log in</strong>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <% } %>
+            </div>
+</nav>
+
+<body style=" height: 100vh;">
+    <!-- <a style="position: fixed; bottom: 0; right: 0;"
+        onClick="document.querySelector('#popup2').classList.add('is-active')">
+
+        <button class="button is-danger is-light">New Nation</button>
+    </a> -->
+    <div style="margin-top: 60px;">
+        <% if(error_msg !='' ){ %>
+            <%= error_msg %>
+                <% } %>
+    </div>
+
+    <div class="search">
+        <input type="text" class="searchTerm" id="search-box" placeholder="What are you looking for?"
+            onkeyup="sendData(this)">
+        <button type="submit" class="searchButton">
+            <i class="fa fa-search"></i>
+        </button>
+    </div>
+
+    <!-- Popup -->
+    <div id="popup2" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head" style="background-color: #f24567">
+                <p class="modal-card-title" style="text-align: center; font-weight: 700;"> ADD NEW NATION</p>
+                <button class="delete" aria-label="close"
+                    onclick="document.querySelector('#popup2').classList.remove('is-active')"></button>
+            </header>
+            <section class="modal-card-body">
+                <form method="post" action="/nations">
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Nation</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input is-info" required name="name" type="text"
+                                        placeholder="e.g. Brazil">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Description</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input is-info" required name="description" type="text"
+                                        placeholder="Let's description">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field is-horizontal" style="margin-left: 120px;">
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                    <button class="button is-primary" type="submit" style="font-weight: 700">
+                                        Create
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <!-- table content -->
+    <div class="container is-fluid" style="display:flex; justify-content: center; padding-top: 20px;">
+        <div>
+            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" style="width: 1000px;">
+                <thead style="height: 40px; background-color: #f245689b">
+                    <tr>
+                        <th style="text-align: center;">Nations</th>
+                        <th style="text-align: center;">Image</th>
+                        <th style="text-align: center;">Description</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody style="text-align: center" id="searchResults">
+                    <% nations.forEach(function(nation) { %>
+                        <tr>
+                            <td style="padding-top: 18px;">
+                                <%= nation.name %>
+                            </td>
+                            <td style="padding-top: 18px;">
+                                <figure class="image is-48x48">
+                                    <img src="https://cloudinary.fifa.com/api/v3/picture/flags-sq-2/<%=nation.name.slice(0, 3).toUpperCase()%>?tx=c_fill,g_auto,q_auto,w_70,h_46"
+                                        alt="Placeholder image">
+                                </figure>
+                            </td>
+                            <td style="padding-top: 18px;">
+                                <%= nation.description %>
+                            </td>
+                            <td style="padding-top: 12px;">
+
+                                <div class="dropdown" style="height: 50px;">
+                                    <div class="dropdown-trigger">
+                                        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
+                                            <span class="icon ">
+                                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                        <div class="dropdown-content" style="width: 120px">
+                                            <a class="dropdown-item" href="/nations/edit/<%=nation.id %>"><i
+                                                    class="fa-solid fa-pencil"
+                                                    style="margin-left: 6px; margin-right: 10px;"></i>Edit</a>
+                                            <a class="dropdown-item" href="/nations/delete/<%=nation.id %>"
+                                                onclick="return confirm('Are you sure ???')"><i
+                                                    class="fa-solid fa-trash-can"
+                                                    style="margin-left: 6px; margin-right: 10px;"></i>Delete</button></a>
+                                        </div>
+                                    </div>
+
+                                </div>
+        </div>
+    </div>
+    </td>
+    </tr>
+    <% }) %>
+        </tbody>
+        </table>
+        </div>
+
+        </div>
+        <!-- popup -->
+
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+<script>
+    // $(document).ready(function () {
+    //     $('#mytable').DataTable();
+    // });
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     // Get all "dropdown" elements
+    //     var dropdowns = Array.prototype.slice.call(document.querySelectorAll('.dropdown'), 0);
+
+    //     // Loop through all dropdowns and bind click event
+    //     dropdowns.forEach(function (dropdown) {
+    //         dropdown.addEventListener('click', function (event) {
+    //             event.stopPropagation();
+    //             dropdown.classList.toggle('is-active');
+    //         });
+    //     });
+
+    //     // Close dropdowns when clicking outside
+    //     document.addEventListener('click', function (event) {
+    //         closeDropdowns();
+    //     });
+
+    //     function closeDropdowns() {
+    //         dropdowns.forEach(function (dropdown) {
+    //             dropdown.classList.remove('is-active');
+    //         });
+    //     }
+
+
+    // });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the parent container that holds the dropdowns
+        var container = document.querySelector('.container');
+
+        // Bind click event to the container
+        container.addEventListener('click', function (event) {
+            var dropdown = event.target.closest('.dropdown');
+            if (dropdown) {
+                event.stopPropagation();
+                dropdown.classList.toggle('is-active');
+            } else {
+                closeDropdowns();
+            }
+        });
+
+        function closeDropdowns() {
+            var dropdowns = Array.prototype.slice.call(document.querySelectorAll('.dropdown'), 0);
+            dropdowns.forEach(function (dropdown) {
+                dropdown.classList.remove('is-active');
+            });
+        }
+    });
+    function sendData(e) {
+        fetch('/nations/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ payload: e.value })
+        })
+            .then(res => {
+                console.log(res);
+                return res.json();
+            })
+            .then(data => {
+                console.log(data);
+                let payload = data.payload;
+                $('#searchResults').html('')
+                if (payload.length < 1) {
+                    searchResults.innerHTML = '<p>Sorry. Nothing found!</p>';
+                    return;
+                }
+                payload.forEach(nation => {
+                    var item = `
+                        <tr>
+                            <td style="padding-top: 18px;">
+                                ${nation.name}
+                            </td>
+                            <td style="padding-top: 18px;">
+                                <figure class="image is-48x48">
+                                    <img src="https://cloudinary.fifa.com/api/v3/picture/flags-sq-2/${nation.name.slice(0, 3).toUpperCase()}?tx=c_fill,g_auto,q_auto,w_70,h_46"
+                                        alt="Placeholder image">
+                                </figure>
+                            </td>
+                            <td style="padding-top: 18px;">
+                                ${nation.description}
+                            </td>
+                            <td style="padding-top: 12px;">
+
+                                <div class="dropdown" style="height: 50px;">
+                                    <div class="dropdown-trigger">
+                                        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
+                                            <span class="icon ">
+                                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                        <div class="dropdown-content" style="width: 120px">
+                                            <a class="dropdown-item" href="/nations/edit/${nation._id}"><i
+                                                    class="fa-solid fa-pencil"
+                                                    style="margin-left: 6px; margin-right: 10px;"></i>Edit</a>
+                                            <a class="dropdown-item" href="/nations/delete/${nation._id}"
+                                                onclick="return confirm('Are you sure ???')"><i
+                                                    class="fa-solid fa-trash-can"
+                                                    style="margin-left: 6px; margin-right: 10px;"></i>Delete</button></a>
+                                        </div>
+                                    </div>
+
+                                </div>
+        </div>
+    </div>
+    </td>
+    </tr>
+        `
+                    $('#searchResults').append(item);
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+
+
+</script>
+
+</html>

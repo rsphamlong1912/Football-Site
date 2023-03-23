@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include ('./patials/head') %>
+<body>
+    <h1 style="text-align: center; margin-top: 100px; font-size: 40px; font-weight: 500; margin-bottom: 20px;">UPDATE NATION</h1>
+    <% if(error_msg != ''){ %>
+        <%= error_msg %>
+    <% } %>
+    <form method="post" class="container is-max-desktop" style="margin-top: 10px;">
+        <div class="field is-horizontal" style="margin-bottom: 30px;">
+            <div class="field-label is-normal">
+                <label class="label">Name</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-info" name="name" type="text" required value="<%= nation.name %>">
+                    </div>
+                    <!-- <p class="help is-danger">
+                        This field is required
+                    </p> -->
+                </div>
+            </div>
+        </div>
+        
+    
+        <div class="field is-horizontal" style="margin-bottom: 30px;">
+            <div class="field-label is-normal">
+                <label class="label">Description</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-info" name="description" required type="text" value="<%= nation.description %>">
+                    </div>
+                    <!-- <p class="help is-danger">
+                        This field is required
+                    </p> -->
+                </div>
+            </div>
+        </div>
+
+        <div class="field is-horizontal">
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary" type="submit" style="margin-left: 180px;">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+<script>
+    // Show error message
+    
+        </script>
+</html>
